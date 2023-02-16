@@ -93,6 +93,7 @@ var pomodoro = {
       this.minutesDom = document.querySelector('#minutes');
       this.secondsDom = document.querySelector('#seconds');
       this.fillerDom = document.querySelector('#filler');
+      this.alertSong = new Audio('https://kvnol.github.io/obs-pomodoro/positive-game-sound-4.ogg');
       this.interval = setInterval(function(){
         self.intervalCallback.apply(self);
       }, 1000);
@@ -116,15 +117,20 @@ var pomodoro = {
     startWork: function() {
       this.resetVariables(50, 0, true);
       document.querySelector('#buttons').classList.add('hide');
+      this.alertSong.play();
+      
     },
     startShortBreak : function(){
       this.resetVariables(10, 0, true);
       document.querySelector('#buttons').classList.add('hide');
+      this.alertSong.play();
+      
     },
     stopTimer : function(){
       this.resetVariables(50, 0, false);
       this.updateDom();
       document.querySelector('#buttons').classList.remove('hide');
+      this.alertSong.play();
     },
     toDoubleDigit : function(num){
       if(num < 10) {
