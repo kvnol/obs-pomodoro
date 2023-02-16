@@ -3,58 +3,57 @@
 <head>
 <style>
 #container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #000;
   border: 16px solid #000;
   border-radius: 32px;
   width:320px;
-  padding: 48px 16px;
+  padding: 48px 8px;
   text-align:center;
   font-family: 'Poppins', sans-serif;
 }
 
 #timer{ 
-  color:#fff; 
-  font-size: 72px;
-  overflow:hidden;
-  position:relative;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  cursor:default;
+  color:#FFCB44; 
+  font-size: 48px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 #time{
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid #fff;
-  margin-bottom: 48px;
-  padding-bottom: 48px;
 }
 
-#filler{
-  width: 104px;
-  margin: 48px auto;
-  border-bottom: 1px solid #fff;
+#buttons {
+  display: flex;
+  background-color: #FFCB44;
+  border-radius: 24px;
+  padding: 8px 16px;
+  margin-left: 16px;
+}
+
+#buttons.hide {
+  display: none;
 }
 
 #buttons button { 
   display: block;
-  margin-left: auto;
-  margin-right: auto;
   appearance: none;
-  border: 2px solid #fff; 
-  color:#fff; 
-  cursor:pointer; 
-  padding: 8px 24px;
-  font-size: 20px;
-  font-weight: 300;
-  border-radius: 24px;
+  border: 0;
+  color:#000; 
   background-color: transparent;
+  cursor:pointer; 
+  font-size: 14px;
+  font-weight: 600;
 }
 
-button:not(:last-child) {
-  margin-bottom: 24px;
+#buttons button:not(:last-child) {
+  border-right: 1px solid #000;
+  margin-right: 16px;
+  padding-right: 16px;
 }
 
 </style>
@@ -64,18 +63,15 @@ button:not(:last-child) {
   <div id="container">
     <div id="timer">
       <div id="time">
-        <span id="minutes">25</span>
+        <span id="minutes">50</span>
         <span id="colon">:</span>
         <span id="seconds">00</span>
       </div>
-      <div id="filler"></div>
     </div>
 
     <div id="buttons">
       <button id="work">Work</button>
-      <button id="shortBreak">Short Break</button>
-      <button id="longBreak">Long Break</button>
-      <button id="stop">Stop</button>
+      <button id="shortBreak">Break</button>
     </div>
   </div>
 </div>
@@ -104,12 +100,9 @@ var pomodoro = {
       document.querySelector('#shortBreak').onclick = function(){
         self.startShortBreak.apply(self);
       };
-      document.querySelector('#longBreak').onclick = function(){
-        self.startLongBreak.apply(self);
-      };
-      document.querySelector('#stop').onclick = function(){
+      document.querySelector('#timer').onclick = function() {
         self.stopTimer.apply(self);
-      };
+      }
     },
     resetVariables : function(mins, secs, started){
       this.minutes = mins;
@@ -119,17 +112,17 @@ var pomodoro = {
       this.fillerHeight = 0;  
     },
     startWork: function() {
-      this.resetVariables(25, 0, true);
+      this.resetVariables(50, 0, true);
+      document.querySelector('#buttons').classList.add('hide');
     },
     startShortBreak : function(){
-      this.resetVariables(5, 0, true);
-    },
-    startLongBreak : function(){
-      this.resetVariables(15, 0, true);
+      this.resetVariables(10, 0, true);
+      document.querySelector('#buttons').classList.add('hide');
     },
     stopTimer : function(){
-      this.resetVariables(25, 0, false);
+      this.resetVariables(50, 0, false);
       this.updateDom();
+      document.querySelector('#buttons').classList.remove('hide');
     },
     toDoubleDigit : function(num){
       if(num < 10) {
@@ -140,8 +133,6 @@ var pomodoro = {
     updateDom : function(){
       this.minutesDom.innerHTML = this.toDoubleDigit(this.minutes);
       this.secondsDom.innerHTML = this.toDoubleDigit(this.seconds);
-      this.fillerHeight = this.fillerHeight + this.fillerIncrement;
-      this.fillerDom.style.height = this.fillerHeight + 'px';
     },
     intervalCallback : function(){
       if(!this.started) return false;
@@ -160,6 +151,7 @@ var pomodoro = {
     timerComplete : function(){
       this.started = false;
       this.fillerHeight = 0;
+      document.querySelector('#buttons').classList.remove('hide');
     }
 };
 window.onload = function(){
